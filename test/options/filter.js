@@ -13,7 +13,7 @@ QUnit.test('options.filter', function (assert) {
   $input.datepicker('show');
 
   datepicker.$days.children().each(function (i) {
-    if (i % 7 === 0) {
+    if(i % 7 === 0 && i < 35) {
       assert.ok($(this).hasClass(datepicker.options.disabledClass));
     }
   });
