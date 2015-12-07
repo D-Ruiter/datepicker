@@ -5,3 +5,4 @@ bower_components
 dist/*.map
 /_*
 /.idea
+*.log
