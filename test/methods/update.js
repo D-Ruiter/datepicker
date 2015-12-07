@@ -1,7 +1,7 @@
 QUnit.test('method.update', function (assert) {
   var $input = window.createInput();
   var datepicker = $input.datepicker().data('datepicker');
-  var val = '02/14/2014';
+  var val = '02/14/2014 14:50';
 
   $input.val(val);
   $input.datepicker('update');

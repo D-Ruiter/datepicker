@@ -38,7 +38,7 @@
   var EVENT_PICK = 'pick.' + NAMESPACE;
 
   // RegExps
-  var REGEXP_FORMAT = /y+|m+|d+/g;
+  var REGEXP_FORMAT = /y+|m+|d+|h+|M+/g;
   var REGEXP_DIGITS = /\d+/g;
   var REGEXP_YEAR = /^\d{2,4}$/;
 
@@ -113,7 +113,7 @@
   }
 
   function parseFormat(format) {
-    var source = String(format).toLowerCase();
+    var source = format;
     var parts = source.match(REGEXP_FORMAT);
     var length;
     var i;
@@ -146,6 +146,15 @@
           format.hasYear = true;
           break;
 
+        case 'h':
+        case 'hh':
+          format.hasHours = true;
+          break;
+
+        case 'M':
+        case 'MM':
+          format.hasMinutes = true;
+          break;
         // No default
       }
     }
@@ -263,6 +272,9 @@
       this.$monthNext = $picker.find('[data-view="month next"]');
       this.$monthCurrent = $picker.find('[data-view="month current"]');
       this.$days = $picker.find('[data-view="days"]');
+
+      //Time view
+      this.$timePicker = $picker.find('[data-view="time picker"]');
 
       if (this.isInline) {
         $(options.container || $this).append($picker.addClass(CLASS_INLINE));
@@ -1215,6 +1227,8 @@
       var year;
       var day;
       var month;
+      var hours;
+      var minutes;
       var val;
       var i;
 
@@ -1228,6 +1242,8 @@
       year = date.getFullYear();
       day = date.getDate();
       month = date.getMonth();
+      hours = date.getHours();
+      minutes = date.getMinutes();
       length = format.parts.length;
 
       if (parts.length === length) {
@@ -1253,12 +1269,22 @@
               year = val;
               break;
 
+            case 'h':
+            case 'hh':
+              hours = val;
+              break;
+
+            case 'M':
+            case 'MM':
+              minutes = val;
+              break;
+
             // No default
           }
         }
       }
 
-      return new Date(year, month, day);
+      return new Date(year, month, day, hours, minutes);
     },
 
     /**
@@ -1269,7 +1295,7 @@
      */
     formatDate: function (date) {
       var format = this.format;
-      var formated = '';
+      var formatted = '';
       var length;
       var year;
       var part;
@@ -1277,13 +1303,17 @@
       var i;
 
       if (isDate(date)) {
-        formated = format.source;
+        formatted = format.source;
         year = date.getFullYear();
         val = {
           d: date.getDate(),
           m: date.getMonth() + 1,
           yy: year.toString().substring(2),
-          yyyy: year
+          yyyy: year,
+          h: date.getHours(),
+          hh: date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
+          M: date.getMinutes(),
+          MM: date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()
         };
 
         val.dd = (val.d < 10 ? '0' : '') + val.d;
@@ -1292,11 +1322,11 @@
 
         for (i = 0; i < length; i++) {
           part = format.parts[i];
-          formated = formated.replace(part, val[part]);
+          formatted = formatted.replace(part, val[part]);
         }
       }
 
-      return formated;
+      return formatted;
     },
 
     // Destroy the datepicker and remove the instance from the target element
@@ -1332,7 +1362,7 @@
     language: '',
 
     // The date string format
-    format: 'mm/dd/yyyy',
+    format: 'mm/dd/yyyy hh:MM',
 
     // The initial date
     date: null,
@@ -1385,6 +1415,7 @@
     // The template of the datepicker
     template: (
       '<div class="datepicker-container">' +
+        '<div class="datepicker-panel" data-view="time-picker"></div>' +
         '<div class="datepicker-panel" data-view="years picker">' +
           '<ul>' +
             '<li data-view="years prev">&lsaquo;</li>' +
