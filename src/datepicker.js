@@ -452,11 +452,23 @@
 
       $.extend(defaults, data);
 
+      var classList = [];
+
+      if (defaults.disabled){
+        classList.push(options.disabledClass);
+      }
+
+      if (defaults.picked){
+        classList.push(options.pickedClass);
+      }
+
+      if (defaults.muted){
+        classList.push(options.mutedClass);
+      }
+
       return (
-        '<' + itemTag + ' ' +
-        (defaults.disabled ? 'class="' + options.disabledClass + '"' :
-        defaults.picked ? 'class="' + options.pickedClass + '"' :
-        defaults.muted ? 'class="' + options.mutedClass + '"' : '') +
+        '<' + itemTag +
+        (classList.length ? ' class="' + classList.join(' ') + '"' : '') +
         (defaults.view ? ' data-view="' + defaults.view + '"' : '') +
         '>' +
         defaults.text +
