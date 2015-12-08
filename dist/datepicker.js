@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2015 Fengyuan Chen
  * Released under the MIT license
  *
- * Date: 2015-12-08T12:10:59.417Z
+ * Date: 2015-12-08T14:11:16.855Z
  */
 
 (function (factory) {
@@ -293,43 +293,43 @@
             max: parseInt($dm.attr('max'), 10)
           };
 
-      $dh.on('change', function(e){
+      $dh.on('change', function (e) {
         e.preventDefault();
 
         var $this = $(this),
             val   = parseInt($this.val(), 10);
 
-        if(val > hours.max){
+        if (val > hours.max){
           val = hours.max;
         }
 
-        if(val < hours.min){
+        if (val < hours.min){
           val = hours.min;
         }
 
-        if(val < 10){
-          val = '0'+val;
+        if (val < 10){
+          val = '0' + val;
         }
 
         $this.val(val);
       });
 
-      $dm.on('change', function(e){
+      $dm.on('change', function (e) {
         e.preventDefault();
 
         var $this = $(this),
             val   = parseInt($this.val(), 10);
 
-        if(val > minutes.max){
+        if (val > minutes.max){
           val = minutes.max;
         }
 
-        if(val < minutes.min){
+        if (val < minutes.min){
           val = minutes.min;
         }
 
-        if(val < 10){
-          val = '0'+val;
+        if (val < 10){
+          val = '0' + val;
         }
 
         $this.val(val);
@@ -403,6 +403,8 @@
       var $yearsPicker = this.$yearsPicker;
       var $monthsPicker = this.$monthsPicker;
       var $daysPicker = this.$daysPicker;
+      var $timeWrapper = $daysPicker.find('div[data-time-wrapper]');
+
       var format = this.format;
 
       if (format.hasYear || format.hasMonth || format.hasDay) {
@@ -440,6 +442,12 @@
           default:
             $yearsPicker.addClass(CLASS_HIDE);
             $monthsPicker.addClass(CLASS_HIDE);
+
+            if (!format.hasHours){
+              $timeWrapper.addClass(CLASS_HIDE);
+            } else {
+              $timeWrapper.removeClass(CLASS_HIDE);
+            }
 
             if (format.hasDay) {
               this.fillDays();
@@ -997,6 +1005,14 @@
           break;
 
         case 'day picked':
+          viewMonth   = view === 'day prev' ? viewMonth - 1 : view === 'day next' ? viewMonth + 1 : viewMonth;
+          viewDay     = parseInt($target.text(), 10);
+          viewHours   = parseInt(this.$daysPicker.find('input[data-hours]').val(), 10) || 0;
+          viewMinutes = parseInt(this.$daysPicker.find('input[data-minutes]').val(), 10) || 0;
+
+          this.date     = new Date(viewYear, viewMonth, viewDay, viewHours, viewMinutes);
+          this.viewDate = new Date(viewYear, viewMonth, viewDay, viewHours, viewMinutes);
+
           this.hideView();
           this.pick('day');
           break;
@@ -1497,8 +1513,10 @@
           '</ul>' +
           '<ul data-view="week"></ul>' +
           '<ul data-view="days"></ul>' +
-          '<input type="text" pattern="[0-9]*" data-hours min=0 max=23 value="00" />' +
-          '<input type="text" pattern="[0-9]*" data-minutes min=0 max=59 step=5 value="00" />' +
+          '<div data-time-wrapper>' +
+            '<input type="text" pattern="[0-9]*" data-hours min=0 max=23 value="00" />' +
+            '<input type="text" pattern="[0-9]*" data-minutes min=0 max=59 step=5 value="00" />' +
+          '</div>' +
         '</div>' +
       '</div>'
     ),
