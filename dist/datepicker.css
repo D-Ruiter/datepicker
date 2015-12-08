@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2015 Fengyuan Chen
  * Released under the MIT license
  *
- * Date: 2015-12-07T14:46:14.418Z
+ * Date: 2015-12-08T10:48:29.237Z
  */
 .datepicker-container {
   position: fixed;
@@ -98,6 +98,26 @@
 .datepicker-bottom-right:after {
   right: 10px; 
   left: auto;
+}
+
+.datepicker-panel > input[data-hours] {
+  float: left;
+  width: 50%;
+  text-align: right; 
+  border-top: 1px solid #dcdcdc;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
+}
+
+.datepicker-panel > input[data-minutes] {
+  float: left;
+  width: 50%;
+  text-align: left; 
+  border-top: 1px solid #dcdcdc;
+  border-right: 0;
+  border-bottom: 0;
+  border-left: 0;
 }
 
 .datepicker-panel > ul:before,

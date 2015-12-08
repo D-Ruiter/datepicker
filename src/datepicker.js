@@ -273,9 +273,6 @@
       this.$monthCurrent = $picker.find('[data-view="month current"]');
       this.$days = $picker.find('[data-view="days"]');
 
-      //Time view
-      this.$timePicker = $picker.find('[data-view="time picker"]');
-
       if (this.isInline) {
         $(options.container || $this).append($picker.addClass(CLASS_INLINE));
       } else {
@@ -807,6 +804,8 @@
       var viewYear;
       var viewMonth;
       var viewDay;
+      var viewHours;
+      var viewMinutes;
       var isYear;
       var year;
       var view;
@@ -818,24 +817,26 @@
         return;
       }
 
-      viewYear = viewDate.getFullYear();
-      viewMonth = viewDate.getMonth();
-      viewDay = viewDate.getDate();
-      view = $target.data('view');
+      viewYear    = viewDate.getFullYear();
+      viewMonth   = viewDate.getMonth();
+      viewDay     = viewDate.getDate();
+      viewHours   = viewDate.getHours() || 0;
+      viewMinutes = viewDate.getMinutes() || 0;
+      view        = $target.data('view');
 
       switch (view) {
         case 'years prev':
         case 'years next':
-          viewYear = view === 'years prev' ? viewYear - 10 : viewYear + 10;
-          year = $target.text();
-          isYear = REGEXP_YEAR.test(year);
+          viewYear  = view === 'years prev' ? viewYear - 10 : viewYear + 10;
+          year      = $target.text();
+          isYear    = REGEXP_YEAR.test(year);
 
           if (isYear) {
-            viewYear = parseInt(year, 10);
-            this.date = new Date(viewYear, viewMonth, min(viewDay, 28));
+            viewYear  = parseInt(year, 10);
+            this.date = new Date(viewYear, viewMonth, min(viewDay, 28), viewHours, viewMinutes);
           }
 
-          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28));
+          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28), viewHours, viewMinutes);
           this.fillYears();
 
           if (isYear) {
@@ -847,8 +848,8 @@
 
         case 'year prev':
         case 'year next':
-          viewYear = view === 'year prev' ? viewYear - 1 : viewYear + 1;
-          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28));
+          viewYear      = view === 'year prev' ? viewYear - 1 : viewYear + 1;
+          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28), viewHours, viewMinutes);
           this.fillMonths();
           break;
 
@@ -871,9 +872,9 @@
           break;
 
         case 'year':
-          viewYear = parseInt($target.text(), 10);
-          this.date = new Date(viewYear, viewMonth, min(viewDay, 28));
-          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28));
+          viewYear      = parseInt($target.text(), 10);
+          this.date     = new Date(viewYear, viewMonth, min(viewDay, 28), viewHours, viewMinutes);
+          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28), viewHours, viewMinutes);
 
           if (this.format.hasMonth) {
             this.showView(1);
@@ -886,8 +887,8 @@
 
         case 'month prev':
         case 'month next':
-          viewMonth = view === 'month prev' ? viewMonth - 1 : view === 'month next' ? viewMonth + 1 : viewMonth;
-          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28));
+          viewMonth     = view === 'month prev' ? viewMonth - 1 : view === 'month next' ? viewMonth + 1 : viewMonth;
+          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28), viewHours, viewMinutes);
           this.fillDays();
           break;
 
@@ -910,9 +911,9 @@
           break;
 
         case 'month':
-          viewMonth = $.inArray($target.text(), this.options.monthsShort);
-          this.date = new Date(viewYear, viewMonth, min(viewDay, 28));
-          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28));
+          viewMonth     = $.inArray($target.text(), this.options.monthsShort);
+          this.date     = new Date(viewYear, viewMonth, min(viewDay, 28), viewHours, viewMinutes);
+          this.viewDate = new Date(viewYear, viewMonth, min(viewDay, 28), viewHours, viewMinutes);
 
           if (this.format.hasDay) {
             this.showView(0);
@@ -926,10 +927,13 @@
         case 'day prev':
         case 'day next':
         case 'day':
-          viewMonth = view === 'day prev' ? viewMonth - 1 : view === 'day next' ? viewMonth + 1 : viewMonth;
-          viewDay = parseInt($target.text(), 10);
-          this.date = new Date(viewYear, viewMonth, viewDay);
-          this.viewDate = new Date(viewYear, viewMonth, viewDay);
+          viewMonth   = view === 'day prev' ? viewMonth - 1 : view === 'day next' ? viewMonth + 1 : viewMonth;
+          viewDay     = parseInt($target.text(), 10);
+          viewHours   = parseInt(this.$daysPicker.find('input[data-hours]').val(), 10) || 0;
+          viewMinutes = parseInt(this.$daysPicker.find('input[data-minutes]').val(), 10) || 0;
+
+          this.date     = new Date(viewYear, viewMonth, viewDay, viewHours, viewMinutes);
+          this.viewDate = new Date(viewYear, viewMonth, viewDay, viewHours, viewMinutes);
           this.fillDays();
 
           if (view === 'day') {
@@ -1146,13 +1150,13 @@
     /**
      * Get the current date
      *
-     * @param {Boolean} formated (optional)
+     * @param {Boolean} formatted (optional)
      * @return {Date|String} (date)
      */
-    getDate: function (formated) {
+    getDate: function (formatted) {
       var date = this.date;
 
-      return formated ? this.formatDate(date) : new Date(date);
+      return formatted ? this.formatDate(date) : new Date(date);
     },
 
     /**
@@ -1291,7 +1295,7 @@
      * Format a date object to a string with the set date format
      *
      * @param {Date} date
-     * @return {String} (formated date)
+     * @return {String} (formatted date)
      */
     formatDate: function (date) {
       var format = this.format;
@@ -1311,13 +1315,14 @@
           yy: year.toString().substring(2),
           yyyy: year,
           h: date.getHours(),
-          hh: date.getHours() < 10 ? '0'+date.getHours() : date.getHours(),
-          M: date.getMinutes(),
-          MM: date.getMinutes() < 10 ? '0'+date.getMinutes() : date.getMinutes()
+          M: date.getMinutes()
         };
 
         val.dd = (val.d < 10 ? '0' : '') + val.d;
         val.mm = (val.m < 10 ? '0' : '') + val.m;
+        val.hh = (val.h < 10 ? '0' : '') + val.h;
+        val.MM = (val.M < 10 ? '0' : '') + val.M;
+
         length = format.parts.length;
 
         for (i = 0; i < length; i++) {
@@ -1362,7 +1367,7 @@
     language: '',
 
     // The date string format
-    format: 'mm/dd/yyyy hh:MM',
+    format: 'dd/mm/yyyy hh:MM',
 
     // The initial date
     date: null,
@@ -1415,7 +1420,6 @@
     // The template of the datepicker
     template: (
       '<div class="datepicker-container">' +
-        '<div class="datepicker-panel" data-view="time-picker"></div>' +
         '<div class="datepicker-panel" data-view="years picker">' +
           '<ul>' +
             '<li data-view="years prev">&lsaquo;</li>' +
@@ -1440,6 +1444,8 @@
           '</ul>' +
           '<ul data-view="week"></ul>' +
           '<ul data-view="days"></ul>' +
+          '<input type="number" data-hours min=0 max=23 value=0 />' +
+          '<input type="number" data-minutes min=0 max=59 step=5 value=0 />' +
         '</div>' +
       '</div>'
     ),

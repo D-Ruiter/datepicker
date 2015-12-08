@@ -13,7 +13,7 @@ $(function () {
           console.log(e.type, e.namespace);
         },
         pick: function (e) {
-          console.log(e.type, e.namespace, e.view);
+          console.log('pick', e);
         }
       };
 
@@ -25,7 +25,7 @@ $(function () {
       console.log(e.type, e.namespace);
     },
     'pick.datepicker': function (e) {
-      console.log(e.type, e.namespace, e.view);
+      console.log('pick.datepicker', e);
     }
   }).datepicker(options);
 

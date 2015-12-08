@@ -108,6 +108,25 @@
 // -----------------------------------------------------------------------------
 
 .datepicker-panel {
+  > input[data-hours] {
+    float: left;
+    width: 50%;
+    border-left: 0;
+    border-right: 0;
+    border-top: 1px solid #DCDCDC;
+    border-bottom: 0;
+    text-align: right;
+  }
+
+  > input[data-minutes] {
+    float: left;
+    width: 50%;
+    border-left: 0;
+    border-right: 0;
+    border-top: 1px solid #DCDCDC;
+    border-bottom: 0;
+    text-align: left;
+  }
   > ul:before,
   > ul:after {
     display: table;

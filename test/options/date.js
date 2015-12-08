@@ -11,7 +11,7 @@ QUnit.test('options.date: Date', function (assert) {
 
 QUnit.test('options.date: String', function (assert) {
   var $input = window.createInput();
-  var initialDate = '02/14/2014 14:50';
+  var initialDate = '14/02/2014 14:50';
 
   $input.datepicker({
     date: initialDate
