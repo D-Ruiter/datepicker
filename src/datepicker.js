@@ -281,6 +281,59 @@
       }
 
       this.fillWeek();
+
+      var $dh     = this.$daysPicker.find('[data-hours]'),
+          $dm     = this.$daysPicker.find('[data-minutes]'),
+          hours   = {
+            min: parseInt($dh.attr('min'), 10),
+            max: parseInt($dh.attr('max'), 10)
+          },
+          minutes = {
+            min: parseInt($dm.attr('min'), 10),
+            max: parseInt($dm.attr('max'), 10)
+          };
+
+      $dh.on('change', function(e){
+        e.preventDefault();
+
+        var $this = $(this),
+            val   = parseInt($this.val(), 10);
+
+        if(val > hours.max){
+          val = hours.max;
+        }
+
+        if(val < hours.min){
+          val = hours.min;
+        }
+
+        if(val < 10){
+          val = '0'+val;
+        }
+
+        $this.val(val);
+      });
+
+      $dm.on('change', function(e){
+        e.preventDefault();
+
+        var $this = $(this),
+            val   = parseInt($this.val(), 10);
+
+        if(val > minutes.max){
+          val = minutes.max;
+        }
+
+        if(val < minutes.min){
+          val = minutes.min;
+        }
+
+        if(val < 10){
+          val = '0'+val;
+        }
+
+        $this.val(val);
+      });
     },
 
     unbuild: function () {
@@ -1444,8 +1497,8 @@
           '</ul>' +
           '<ul data-view="week"></ul>' +
           '<ul data-view="days"></ul>' +
-          '<input type="number" data-hours min=0 max=23 value=0 />' +
-          '<input type="number" data-minutes min=0 max=59 step=5 value=0 />' +
+          '<input type="text" pattern="[0-9]*" data-hours min=0 max=23 value="00" />' +
+          '<input type="text" pattern="[0-9]*" data-minutes min=0 max=59 step=5 value="00" />' +
         '</div>' +
       '</div>'
     ),
