@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2015 Fengyuan Chen
  * Released under the MIT license
  *
- * Date: 2015-12-08T14:11:16.855Z
+ * Date: 2015-12-09T09:33:16.679Z
  */
 
 (function (factory) {
@@ -291,7 +291,8 @@
           minutes = {
             min: parseInt($dm.attr('min'), 10),
             max: parseInt($dm.attr('max'), 10)
-          };
+          },
+          self = this;
 
       $dh.on('change', function (e) {
         e.preventDefault();
@@ -312,6 +313,11 @@
         }
 
         $this.val(val);
+
+        self.date.setHours(parseInt(val, 10));
+        self.viewDate.setHours(parseInt(val, 10));
+        self.setValue(self.formatDate(self.viewDate));
+        self.update();
       });
 
       $dm.on('change', function (e) {
@@ -333,6 +339,11 @@
         }
 
         $this.val(val);
+
+        self.date.setMinutes(parseInt(val, 10));
+        self.viewDate.setMinutes(parseInt(val, 10));
+        self.setValue(self.formatDate(self.viewDate));
+        self.update();
       });
     },
 
@@ -1050,13 +1061,18 @@
 
       if (this.isInput) {
         val = $this.val();
+        console.log('GV-i: ', val);
       } else if (this.isInline) {
         if (this.options.container) {
           val = $this.text();
+          console.log('GV-c: ', val);
         }
       } else {
         val = $this.text();
+        console.log('GV-e: ', val);
       }
+
+      console.log('GV: ', val);
 
       return val;
     },
