@@ -340,8 +340,6 @@
 
         $this.val(val);
 
-        console.log(parseInt(val, 10));
-
         self.date.setMinutes(parseInt(val, 10));
         self.viewDate.setMinutes(parseInt(val, 10));
         self.setValue(self.formatDate(self.viewDate));
@@ -1141,11 +1139,9 @@
     // Update the datepicker with the current input value
     update: function () {
       this.setDate(this.getValue(), true);
-      console.log(this.date, this.viewDate);
+
       var h = this.viewDate.getHours(),
           m = this.viewDate.getMinutes();
-
-      console.log(h, m);
 
       $('input[data-hours]').val(h < 10 ? '0' + h : h);
       $('input[data-minutes]').val(m < 10 ? '0' + m : m);
