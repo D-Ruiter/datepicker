@@ -5,7 +5,7 @@
  * Copyright (c) 2014-2015 Fengyuan Chen
  * Released under the MIT license
  *
- * Date: 2015-12-09T09:33:16.679Z
+ * Date: 2015-12-09T10:57:55.993Z
  */
 
 (function (factory) {
@@ -339,6 +339,8 @@
         }
 
         $this.val(val);
+
+        console.log(parseInt(val, 10));
 
         self.date.setMinutes(parseInt(val, 10));
         self.viewDate.setMinutes(parseInt(val, 10));
@@ -1061,18 +1063,13 @@
 
       if (this.isInput) {
         val = $this.val();
-        console.log('GV-i: ', val);
       } else if (this.isInline) {
         if (this.options.container) {
           val = $this.text();
-          console.log('GV-c: ', val);
         }
       } else {
         val = $this.text();
-        console.log('GV-e: ', val);
       }
-
-      console.log('GV: ', val);
 
       return val;
     },
@@ -1144,6 +1141,14 @@
     // Update the datepicker with the current input value
     update: function () {
       this.setDate(this.getValue(), true);
+      console.log(this.date, this.viewDate);
+      var h = this.viewDate.getHours(),
+          m = this.viewDate.getMinutes();
+
+      console.log(h, m);
+
+      $('input[data-hours]').val(h < 10 ? '0' + h : h);
+      $('input[data-minutes]').val(m < 10 ? '0' + m : m);
     },
 
     /**
@@ -1337,7 +1342,7 @@
 
       if (parts.length === length) {
         for (i = 0; i < length; i++) {
-          val = parseInt(parts[i], 10) || 1;
+          val = parseInt(parts[i], 10) || 0;
 
           switch (format.parts[i]) {
             case 'dd':
