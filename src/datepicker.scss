@@ -121,12 +121,20 @@
 
     input[data-minutes] {
       float: left;
-      width: 50%;
+      width: 49%;
       border-left: 0;
       border-right: 0;
       border-top: 1px solid #DCDCDC;
       border-bottom: 0;
       text-align: left;
+    }
+
+    span[data-colon] {
+      float:left;
+      height:33px;
+      width:1%;
+      border-top: 1px solid #DCDCDC;
+      line-height:33px;
     }
   }
 

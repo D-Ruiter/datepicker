@@ -1532,6 +1532,7 @@
           '<ul data-view="days"></ul>' +
           '<div data-time-wrapper>' +
             '<input type="text" pattern="[0-9]*" data-hours min=0 max=23 value="00" />' +
+            '<span data-colon>:</span>' +
             '<input type="text" pattern="[0-9]*" data-minutes min=0 max=59 step=5 value="00" />' +
           '</div>' +
         '</div>' +
