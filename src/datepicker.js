@@ -236,6 +236,12 @@
       if (options.autopick) {
         this.pick();
       }
+
+      if (options.readonly) {
+        $this.attr('readonly', 'readonly');
+      } else {
+        $this.removeAttr('readonly');
+      }
     },
 
     build: function () {
@@ -1523,6 +1529,11 @@
           '<ul data-view="months"></ul>' +
         '</div>' +
         '<div class="datepicker-panel" data-view="days picker">' +
+          '<div data-time-wrapper>' +
+            '<input type="text" pattern="[0-9]*" data-hours min=0 max=23 value="00" />' +
+            '<span data-colon>:</span>' +
+            '<input type="text" pattern="[0-9]*" data-minutes min=0 max=59 step=5 value="00" />' +
+          '</div>' +
           '<ul>' +
             '<li data-view="month prev">&lsaquo;</li>' +
             '<li data-view="month current"></li>' +
@@ -1530,11 +1541,6 @@
           '</ul>' +
           '<ul data-view="week"></ul>' +
           '<ul data-view="days"></ul>' +
-          '<div data-time-wrapper>' +
-            '<input type="text" pattern="[0-9]*" data-hours min=0 max=23 value="00" />' +
-            '<span data-colon>:</span>' +
-            '<input type="text" pattern="[0-9]*" data-minutes min=0 max=59 step=5 value="00" />' +
-          '</div>' +
         '</div>' +
       '</div>'
     ),
@@ -1551,7 +1557,8 @@
     // Event shortcuts
     show: null,
     hide: null,
-    pick: null
+    pick: null,
+    readonly: true
   };
 
   Datepicker.setDefaults = function (options) {
